@@ -1,0 +1,8 @@
+Python is a programming language that is easy to learn and powerful.
+Variables store data like numbers and text.
+Functions are reusable blocks of code that perform specific tasks.
+Lists store multiple items in order.
+Dictionaries store key-value pairs for organizing data.
+Loops help repeat actions multiple times.
+FastAPI is a modern framework for building APIs in Python.
+Django is a web framework for building full web applications.

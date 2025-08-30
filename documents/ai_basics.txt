@@ -1,0 +1,7 @@
+Artificial Intelligence helps computers think and learn like humans.
+Machine Learning is when computers learn patterns from data.
+Natural Language Processing helps computers understand human language.
+RAG stands for Retrieval Augmented Generation - it helps AI find relevant information.
+Vector databases store information in a way that AI can quickly search through.
+LangChain is a framework for building applications with language models.
+Embeddings convert text into numerical vectors for semantic search..

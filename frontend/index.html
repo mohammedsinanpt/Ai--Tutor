@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor Mascot 🤖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 700px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .mascot {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 30px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        }
+
+        .mascot:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .mascot-face {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            position: relative;
+            border: 6px solid #FF8C00;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 0 30px rgba(255,215,0,0.4);
+        }
+
+        .mascot-face.happy {
+            background: #FFD700;
+            animation: bounce 0.5s ease;
+        }
+
+        .mascot-face.excited {
+            background: #FF6B6B;
+            animation: wiggle 0.5s ease;
+        }
+
+        .mascot-face.thinking {
+            background: #3498db !important;
+            animation: pulse 1s infinite;
+        }
+
+        .mascot-face.sad {
+            background: #95a5a6;
+        }
+
+        .mascot-face.speaking {
+            animation: speak 0.5s infinite;
+        }
+
+        .eye {
+            width: 35px;
+            height: 35px;
+            background: radial-gradient(circle, #000 40%, #333 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 55px;
+            animation: blink 4s infinite;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .eye::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+
+        .eye.left {
+            left: 50px;
+        }
+
+        .eye.right {
+            right: 50px;
+        }
+
+        .mouth {
+            width: 60px;
+            height: 30px;
+            background: #333;
+            border-radius: 0 0 60px 60px;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .mouth.happy {
+            border-radius: 60px 60px 0 0;
+            bottom: 60px;
+        }
+
+        .mouth.sad {
+            border-radius: 0 0 60px 60px;
+            bottom: 40px;
+        }
+
+        .mouth.speaking {
+            animation: talk 0.3s infinite alternate;
+        }
+
+        .controls {
+            margin-top: 30px;
+        }
+
+        .mic-button {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+            font-size: 35px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mic-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .mic-button:hover::before {
+            left: 100%;
+        }
+
+        .mic-button:hover {
+            background: linear-gradient(145deg, #c0392b, #a93226);
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(231, 76, 60, 0.4);
+        }
+
+        .mic-button.listening {
+            background: #27ae60;
+            animation: pulse 1s infinite;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .send-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .send-button:hover {
+            background: #2980b9;
+        }
+
+        .response-area {
+            margin-top: 25px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 15px;
+            min-height: 120px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .response-area p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .response-area strong {
+            color: #FFD700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes speak {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes talk {
+            0% { height: 20px; }
+            100% { height: 40px; }
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { height: 30px; }
+            95% { height: 5px; }
+        }
+
+        .listening-indicator {
+            margin: 15px 0;
+            padding: 10px 20px;
+            background: rgba(39, 174, 96, 0.2);
+            border: 2px solid #27ae60;
+            border-radius: 25px;
+            color: #27ae60;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: glow 1s infinite alternate;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(39, 174, 96, 0.3);
+            border-radius: 50%;
+            border-top-color: #27ae60;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI Tutor Mascot</h1>
+        <p>Meet your friendly AI learning companion!</p>
+        
+        <!-- The Mascot -->
+        <div class="mascot" id="mascot">
+            <div class="mascot-face" id="mascotFace">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="mouth" id="mouth"></div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <!-- Speech Recognition Button -->
+            <button class="mic-button" id="micButton" title="Click to speak">
+                🎤
+            </button>
+            
+            <!-- Listening Indicator (appears only when listening) -->
+            <div class="listening-indicator" id="listeningIndicator" style="display: none;">
+                <div class="loading"></div>
+                <span>Listening...</span>
+            </div>
+            <br>
+            
+            <!-- Text Input (backup method) -->
+            <input type="text" class="text-input" id="textInput" placeholder="Or type your question here...">
+            <br>
+            <button class="send-button" id="sendButton">Send</button>
+        </div>
+
+        <!-- Response Area -->
+        <div class="response-area" id="responseArea">
+            <p><strong>Mascot says:</strong> Hello! I'm your AI tutor. Click the microphone to ask me a question, or type below!</p>
+        </div>
+
+        <!-- Status -->
+        <div class="status" id="status">
+            Backend Status: <span id="backendStatus">Checking...</span>
+        </div>
+        
+        <!-- Listening Status (more prominent) -->
+        <div class="status" id="listeningStatus" style="font-size: 18px; margin-top: 10px; font-weight: bold;">
+            Ready to help! 🤖
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let isListening = false;
+        let isSpeaking = false;
+        let recognition = null;
+        let speechSynthesis = window.speechSynthesis;
+        
+        // DOM elements
+        const mascotFace = document.getElementById('mascotFace');
+        const mouth = document.getElementById('mouth');
+        const micButton = document.getElementById('micButton');
+        const textInput = document.getElementById('textInput');
+        const sendButton = document.getElementById('sendButton');
+        const responseArea = document.getElementById('responseArea');
+        const backendStatus = document.getElementById('backendStatus');
+        const listeningIndicator = document.getElementById('listeningIndicator');
+
+        // Initialize Speech Recognition with better error handling
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+                
+                recognition.onstart = function() {
+                    console.log('🎤 Speech recognition started');
+                    isListening = true;
+                    micButton.classList.add('listening');
+                    micButton.innerHTML = '🔴';
+                    setMascotEmotion('thinking');
+                    
+                    // Show listening indicator
+                    listeningIndicator.style.display = 'flex';
+                };
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    console.log('🗣️ User said:', transcript);
+                    textInput.value = transcript;
+                    
+                    // Hide listening indicator immediately
+                    listeningIndicator.style.display = 'none';
+                    updateStatus(`You said: "${transcript}" - Processing...`);
+                    
+                    // Auto-stop listening since we got the speech
+                    resetMicrophone();
+                    
+                    // Automatically send the question
+                    setTimeout(() => {
+                        sendQuestionToAPI(transcript);
+                    }, 500);
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('❌ Speech recognition error:', event.error);
+                    let errorMsg = 'Speech recognition error. ';
+                    
+                    switch(event.error) {
+                        case 'not-allowed':
+                            errorMsg += 'Please allow microphone access in browser settings.';
+                            break;
+                        case 'no-speech':
+                            errorMsg += 'No speech detected. Try speaking louder.';
+                            break;
+                        case 'audio-capture':
+                            errorMsg += 'Microphone not found. Check your audio settings.';
+                            break;
+                        case 'network':
+                            errorMsg += 'Network error. Check your internet connection.';
+                            break;
+                        default:
+                            errorMsg += 'Try typing instead or refresh the page.';
+                    }
+                    
+                    updateStatus(errorMsg);
+                    listeningIndicator.style.display = 'none';
+                    resetMicrophone();
+                };
+                
+                recognition.onend = function() {
+                    console.log('🛑 Speech recognition ended');
+                    listeningIndicator.style.display = 'none';
+                    resetMicrophone();
+                };
+                
+                return true;
+            } else {
+                console.warn('⚠️ Speech recognition not supported');
+                updateStatus('Speech recognition not supported. Please use text input.');
+                micButton.style.display = 'none';
+                return false;
+            }
+        }
+
+        // Reset microphone button
+        function resetMicrophone() {
+            isListening = false;
+            micButton.classList.remove('listening');
+            micButton.innerHTML = '🎤';
+            setMascotEmotion('neutral');
+        }
+
+        // Set mascot emotion
+        function setMascotEmotion(emotion) {
+            // Remove all emotion classes
+            mascotFace.className = 'mascot-face';
+            mouth.className = 'mouth';
+            
+            // Add new emotion class
+            mascotFace.classList.add(emotion);
+            
+            // Set mouth expression
+            if (emotion === 'happy' || emotion === 'excited') {
+                mouth.classList.add('happy');
+            } else if (emotion === 'sad') {
+                mouth.classList.add('sad');
+            }
+            
+            console.log('😊 Mascot emotion set to:', emotion);
+        }
+
+        // Text-to-Speech function
+        function speakText(text) {
+            if (isSpeaking) {
+                speechSynthesis.cancel();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            utterance.volume = 0.8;
+            
+            utterance.onstart = function() {
+                console.log('🔊 Started speaking');
+                isSpeaking = true;
+                mascotFace.classList.add('speaking');
+                mouth.classList.add('speaking');
+            };
+            
+            utterance.onend = function() {
+                console.log('🔇 Finished speaking');
+                isSpeaking = false;
+                mascotFace.classList.remove('speaking');
+                mouth.classList.remove('speaking');
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        // Send question to our RAG backend
+        async function sendQuestionToAPI(question) {
+            if (!question.trim()) return;
+            
+            updateStatus('🧠 AI is thinking...');
+            setMascotEmotion('thinking');
+            
+            try {
+                const response = await fetch('http://localhost:8000/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        question: question
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Display response with better formatting
+                responseArea.innerHTML = `
+                    <p><strong>🗣️ You asked:</strong> ${question}</p>
+                    <p><strong>🤖 AI Tutor says:</strong> ${data.text}</p>
+                    <p><strong>😊 Current emotion:</strong> <span style="color: #4ECDC4;">${data.emotion}</span></p>
+                `;
+                
+                // Set emotion and speak
+                setMascotEmotion(data.emotion);
+                speakText(data.text);
+                
+                updateStatus('✅ Response complete!');
+                
+            } catch (error) {
+                console.error('❌ API Error:', error);
+                responseArea.innerHTML = `<p><strong>Error:</strong> Could not connect to AI backend. Make sure it's running on port 8000.</p>`;
+                setMascotEmotion('sad');
+                updateStatus('❌ Backend connection failed');
+            }
+        }
+
+        // Update status message
+        function updateStatus(message) {
+            const listeningStatus = document.getElementById('listeningStatus');
+            if (listeningStatus) {
+                listeningStatus.innerHTML = message;
+            }
+            // Also update the general status
+            document.getElementById('status').innerHTML = `Status: ${message}`;
+        }
+
+        // Check backend health
+        async function checkBackendHealth() {
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                if (response.ok) {
+                    const data = await response.json();
+                    backendStatus.innerHTML = `✅ Connected (${data.rag_system})`;
+                    backendStatus.style.color = '#2ecc71';
+                } else {
+                    throw new Error('Backend not responding');
+                }
+            } catch (error) {
+                backendStatus.innerHTML = '❌ Disconnected';
+                backendStatus.style.color = '#e74c3c';
+                console.error('Backend health check failed:', error);
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 AI Tutor Mascot loaded!');
+            
+            // Initialize speech recognition
+            const speechSupported = initSpeechRecognition();
+            if (!speechSupported) {
+                micButton.style.display = 'none';
+            }
+            
+            // Microphone button click
+            micButton.addEventListener('click', function() {
+                if (!isListening && recognition) {
+                    try {
+                        // Stop any current speech before listening
+                        if (isSpeaking) {
+                            speechSynthesis.cancel();
+                            isSpeaking = false;
+                            mascotFace.classList.remove('speaking');
+                            mouth.classList.remove('speaking');
+                        }
+                        
+                        recognition.start();
+                    } catch (error) {
+                        console.error('Failed to start recognition:', error);
+                        updateStatus('Failed to start speech recognition');
+                    }
+                } else if (isListening) {
+                    recognition.stop();
+                }
+            });
+            
+            // Send button click
+            sendButton.addEventListener('click', function() {
+                const question = textInput.value.trim();
+                if (question) {
+                    sendQuestionToAPI(question);
+                    textInput.value = '';
+                }
+            });
+            
+            // Enter key in text input
+            textInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendButton.click();
+                }
+            });
+            
+            // Check backend health every 5 seconds
+            checkBackendHealth();
+            setInterval(checkBackendHealth, 5000);
+            
+            // Set initial emotion
+            setMascotEmotion('happy');
+            
+            console.log('✅ All systems ready!');
+        });
+
+        // Test function to demonstrate emotions
+        function testEmotions() {
+            const emotions = ['happy', 'excited', 'thinking', 'sad', 'neutral'];
+            let i = 0;
+            
+            const interval = setInterval(() => {
+                setMascotEmotion(emotions[i]);
+                i++;
+                if (i >= emotions.length) {
+                    clearInterval(interval);
+                    setMascotEmotion('happy');
+                }
+            }, 1000);
+        }
+
+        // Make testEmotions available globally for debugging
+        window.testEmotions = testEmotions;
+        window.speakText = speakText;
+        window.sendQuestionToAPI = sendQuestionToAPI;
+    </script>
+</body>
+</html>
