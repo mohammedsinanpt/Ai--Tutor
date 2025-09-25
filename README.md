@@ -10,6 +10,12 @@ This project implements a full-stack AI tutoring system featuring:
 - **Real-time emotional responses** and animations
 - **Speech-to-Speech pipeline** for natural interaction
 
+##Screenshots 
+
+<img width="1274" height="894" alt="Screenshot 2025-09-25 225441" src="https://github.com/user-attachments/assets/78daf43a-2480-4f7a-967e-799c06569ee2" />
+<img width="1098" height="936" alt="Screenshot 2025-09-25 225424" src="https://github.com/user-attachments/assets/eaf7d4cb-2d45-4d19-8d59-400df489315b" />
+<img width="1274" height="894" alt="Screenshot 2025-09-25 225441" src="https://github.com/user-attachments/assets/3494f81d-8290-4437-b016-b8e754f53ccd" />
+
 ## 🏗️ System Architecture
 
 ```
@@ -184,7 +190,3 @@ Modify CSS in `frontend/index.html` for different themes
 - Voice cloning for personalized speech
 - Advanced 3D mascot animations
 - Mobile app development
-
----
-
-**Built with ❤️ for AI Education**
